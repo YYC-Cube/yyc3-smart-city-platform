@@ -9,7 +9,7 @@ export interface Announcement {
   content: string
   category: string
   priority: number
-  tags?: string[]
+  tags?: string
   cover_image?: string
   publisher?: string
   publish_time: Date

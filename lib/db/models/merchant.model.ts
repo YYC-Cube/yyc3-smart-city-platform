@@ -15,8 +15,8 @@ export interface Merchant {
   latitude?: number
   description?: string
   logo_url?: string
-  cover_images?: string[]
-  business_hours?: any
+  cover_images?: string
+  business_hours?: string
   rating: number
   total_orders: number
   status: number
@@ -52,8 +52,8 @@ export interface UpdateMerchantInput {
   latitude?: number
   description?: string
   logo_url?: string
-  cover_images?: string[]
-  business_hours?: any
+  cover_images?: string
+  business_hours?: string
   status?: number
 }
 
@@ -151,11 +151,11 @@ export class MerchantModel {
     }
     if (data.cover_images !== undefined) {
       fields.push("cover_images = ?")
-      values.push(JSON.stringify(data.cover_images))
+      values.push(data.cover_images)
     }
     if (data.business_hours !== undefined) {
       fields.push("business_hours = ?")
-      values.push(JSON.stringify(data.business_hours))
+      values.push(data.business_hours)
     }
     if (data.status !== undefined) {
       fields.push("status = ?")
