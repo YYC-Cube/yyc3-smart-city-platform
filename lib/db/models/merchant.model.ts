@@ -1,8 +1,5 @@
 import { query, queryOne, insert, execute } from "../config"
 
-/**
- * 商家接口定义
- */
 export interface Merchant {
   id: number
   merchant_name: string
@@ -24,9 +21,6 @@ export interface Merchant {
   updated_at: Date
 }
 
-/**
- * 创建商家输入接口
- */
 export interface CreateMerchantInput {
   merchant_name: string
   merchant_type: string
@@ -40,9 +34,6 @@ export interface CreateMerchantInput {
   logo_url?: string
 }
 
-/**
- * 更新商家输入接口
- */
 export interface UpdateMerchantInput {
   merchant_name?: string
   contact_person?: string
@@ -57,45 +48,24 @@ export interface UpdateMerchantInput {
   status?: number
 }
 
-/**
- * 商家模型
- */
 export class MerchantModel {
-  /**
-   * 根据ID查询商家
-   */
   static async findById(id: number): Promise<Merchant | null> {
     const sql = "SELECT * FROM merchants WHERE id = ?"
     return queryOne<Merchant>(sql, [id])
   }
 
-  /**
-   * 查询所有商家
-   */
   static async findAll(limit = 50, offset = 0): Promise<Merchant[]> {
     const sql = "SELECT * FROM merchants WHERE status = 1 ORDER BY rating DESC, created_at DESC LIMIT ? OFFSET ?"
     return query<Merchant>(sql, [limit, offset])
   }
 
-  /**
-   * 根据类型查询商家
-   */
   static async findByType(merchantType: string, limit = 50): Promise<Merchant[]> {
     const sql = "SELECT * FROM merchants WHERE merchant_type = ? AND status = 1 ORDER BY rating DESC LIMIT ?"
     return query<Merchant>(sql, [merchantType, limit])
   }
 
-  /**
-   * 创建商家
-   */
   static async create(data: CreateMerchantInput): Promise<number> {
-    const sql = `
-      INSERT INTO merchants (
-        merchant_name, merchant_type, contact_person, contact_phone,
-        business_license, address, longitude, latitude, description, logo_url
-      )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `
+    const sql = `INSERT INTO merchants (merchant_name, merchant_type, contact_person, contact_phone, business_license, address, longitude, latitude, description, logo_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     return insert(sql, [
       data.merchant_name,
       data.merchant_type,
@@ -110,9 +80,6 @@ export class MerchantModel {
     ])
   }
 
-  /**
-   * 更新商家信息
-   */
   static async update(id: number, data: UpdateMerchantInput): Promise<number> {
     const fields: string[] = []
     const values: any[] = []
@@ -171,17 +138,11 @@ export class MerchantModel {
     return execute(sql, values)
   }
 
-  /**
-   * 删除商家（软删除）
-   */
   static async delete(id: number): Promise<number> {
     const sql = "UPDATE merchants SET status = 0 WHERE id = ?"
     return execute(sql, [id])
   }
 
-  /**
-   * 统计商家数量
-   */
   static async count(merchantType?: string): Promise<number> {
     let sql = "SELECT COUNT(*) as total FROM merchants WHERE status = 1"
     const params: any[] = []
@@ -195,32 +156,17 @@ export class MerchantModel {
     return result?.total || 0
   }
 
-  /**
-   * 搜索商家
-   */
   static async search(keyword: string, limit = 50): Promise<Merchant[]> {
-    const sql = `
-      SELECT * FROM merchants 
-      WHERE status = 1 
-      AND (merchant_name LIKE ? OR address LIKE ? OR description LIKE ?)
-      ORDER BY rating DESC, created_at DESC 
-      LIMIT ?
-    `
+    const sql = `SELECT * FROM merchants WHERE status = 1 AND (merchant_name LIKE ? OR address LIKE ? OR description LIKE ?) ORDER BY rating DESC, created_at DESC LIMIT ?`
     const searchTerm = `%${keyword}%`
     return query<Merchant>(sql, [searchTerm, searchTerm, searchTerm, limit])
   }
 
-  /**
-   * 更新评分
-   */
   static async updateRating(id: number, rating: number): Promise<number> {
     const sql = "UPDATE merchants SET rating = ? WHERE id = ?"
     return execute(sql, [rating, id])
   }
 
-  /**
-   * 增加订单数
-   */
   static async incrementOrders(id: number): Promise<number> {
     const sql = "UPDATE merchants SET total_orders = total_orders + 1 WHERE id = ?"
     return execute(sql, [id])

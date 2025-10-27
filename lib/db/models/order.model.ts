@@ -1,8 +1,5 @@
 import { query, queryOne, insert, execute } from "../config"
 
-/**
- * 订单接口定义
- */
 export interface Order {
   id: number
   order_no: string
@@ -25,9 +22,6 @@ export interface Order {
   updated_at: Date
 }
 
-/**
- * 创建订单输入接口
- */
 export interface CreateOrderInput {
   user_id: number
   merchant_id: number
@@ -43,13 +37,7 @@ export interface CreateOrderInput {
   remark?: string
 }
 
-/**
- * 订单模型
- */
 export class OrderModel {
-  /**
-   * 生成订单号
-   */
   static generateOrderNo(): string {
     const timestamp = Date.now()
     const random = Math.floor(Math.random() * 10000)
@@ -58,51 +46,29 @@ export class OrderModel {
     return `YYC${timestamp}${random}`
   }
 
-  /**
-   * 根据ID查询订单
-   */
   static async findById(id: number): Promise<Order | null> {
     const sql = "SELECT * FROM orders WHERE id = ?"
     return queryOne<Order>(sql, [id])
   }
 
-  /**
-   * 根据订单号查询订单
-   */
   static async findByOrderNo(orderNo: string): Promise<Order | null> {
     const sql = "SELECT * FROM orders WHERE order_no = ?"
     return queryOne<Order>(sql, [orderNo])
   }
 
-  /**
-   * 查询用户订单
-   */
   static async findByUserId(userId: number, limit = 50, offset = 0): Promise<Order[]> {
     const sql = "SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?"
     return query<Order>(sql, [userId, limit, offset])
   }
 
-  /**
-   * 查询商家订单
-   */
   static async findByMerchantId(merchantId: number, limit = 50, offset = 0): Promise<Order[]> {
     const sql = "SELECT * FROM orders WHERE merchant_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?"
     return query<Order>(sql, [merchantId, limit, offset])
   }
 
-  /**
-   * 创建订单
-   */
   static async create(data: CreateOrderInput): Promise<number> {
     const orderNo = this.generateOrderNo()
-    const sql = `
-      INSERT INTO orders (
-        order_no, user_id, merchant_id, service_id, order_type,
-        total_amount, discount_amount, actual_amount,
-        contact_name, contact_phone, service_address, service_time, remark
-      )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `
+    const sql = `INSERT INTO orders (order_no, user_id, merchant_id, service_id, order_type, total_amount, discount_amount, actual_amount, contact_name, contact_phone, service_address, service_time, remark) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     return insert(sql, [
       orderNo,
       data.user_id,
@@ -120,25 +86,16 @@ export class OrderModel {
     ])
   }
 
-  /**
-   * 更新订单状态
-   */
   static async updateStatus(id: number, status: string): Promise<number> {
     const sql = "UPDATE orders SET order_status = ? WHERE id = ?"
     return execute(sql, [status, id])
   }
 
-  /**
-   * 更新支付信息
-   */
   static async updatePayment(id: number, paymentMethod: string): Promise<number> {
     const sql = "UPDATE orders SET payment_method = ?, payment_time = NOW(), order_status = 'paid' WHERE id = ?"
     return execute(sql, [paymentMethod, id])
   }
 
-  /**
-   * 统计订单数量
-   */
   static async count(userId?: number, status?: string): Promise<number> {
     let sql = "SELECT COUNT(*) as total FROM orders WHERE 1=1"
     const params: any[] = []
@@ -156,9 +113,6 @@ export class OrderModel {
     return result?.total || 0
   }
 
-  /**
-   * 统计订单金额
-   */
   static async sumAmount(userId?: number, merchantId?: number): Promise<number> {
     let sql = "SELECT COALESCE(SUM(actual_amount), 0) as total FROM orders WHERE order_status IN ('paid', 'completed')"
     const params: any[] = []

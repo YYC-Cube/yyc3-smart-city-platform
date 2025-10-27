@@ -1,8 +1,5 @@
 import { query, queryOne, insert, execute } from "../config"
 
-/**
- * 用户接口定义
- */
 export interface User {
   id: number
   phone: string
@@ -20,9 +17,6 @@ export interface User {
   updated_at: Date
 }
 
-/**
- * 创建用户输入接口
- */
 export interface CreateUserInput {
   phone: string
   username?: string
@@ -33,9 +27,6 @@ export interface CreateUserInput {
   email?: string
 }
 
-/**
- * 更新用户输入接口
- */
 export interface UpdateUserInput {
   username?: string
   nickname?: string
@@ -49,42 +40,24 @@ export interface UpdateUserInput {
   status?: number
 }
 
-/**
- * 用户模型
- */
 export class UserModel {
-  /**
-   * 根据ID查询用户
-   */
   static async findById(id: number): Promise<User | null> {
     const sql = "SELECT * FROM users WHERE id = ?"
     return queryOne<User>(sql, [id])
   }
 
-  /**
-   * 根据手机号查询用户
-   */
   static async findByPhone(phone: string): Promise<User | null> {
     const sql = "SELECT * FROM users WHERE phone = ?"
     return queryOne<User>(sql, [phone])
   }
 
-  /**
-   * 查询所有用户
-   */
   static async findAll(limit = 50, offset = 0): Promise<User[]> {
     const sql = "SELECT * FROM users WHERE status = 1 ORDER BY created_at DESC LIMIT ? OFFSET ?"
     return query<User>(sql, [limit, offset])
   }
 
-  /**
-   * 创建用户
-   */
   static async create(data: CreateUserInput): Promise<number> {
-    const sql = `
-      INSERT INTO users (phone, username, nickname, avatar, gender, birthday, email)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `
+    const sql = `INSERT INTO users (phone, username, nickname, avatar, gender, birthday, email) VALUES (?, ?, ?, ?, ?, ?, ?)`
     return insert(sql, [
       data.phone,
       data.username || null,
@@ -96,9 +69,6 @@ export class UserModel {
     ])
   }
 
-  /**
-   * 更新用户信息
-   */
   static async update(id: number, data: UpdateUserInput): Promise<number> {
     const fields: string[] = []
     const values: any[] = []
@@ -153,34 +123,19 @@ export class UserModel {
     return execute(sql, values)
   }
 
-  /**
-   * 删除用户（软删除）
-   */
   static async delete(id: number): Promise<number> {
     const sql = "UPDATE users SET status = 0 WHERE id = ?"
     return execute(sql, [id])
   }
 
-  /**
-   * 统计用户数量
-   */
   static async count(): Promise<number> {
     const sql = "SELECT COUNT(*) as total FROM users WHERE status = 1"
     const result = await queryOne<{ total: number }>(sql)
     return result?.total || 0
   }
 
-  /**
-   * 搜索用户
-   */
   static async search(keyword: string, limit = 50): Promise<User[]> {
-    const sql = `
-      SELECT * FROM users 
-      WHERE status = 1 
-      AND (phone LIKE ? OR username LIKE ? OR nickname LIKE ?)
-      ORDER BY created_at DESC 
-      LIMIT ?
-    `
+    const sql = `SELECT * FROM users WHERE status = 1 AND (phone LIKE ? OR username LIKE ? OR nickname LIKE ?) ORDER BY created_at DESC LIMIT ?`
     const searchTerm = `%${keyword}%`
     return query<User>(sql, [searchTerm, searchTerm, searchTerm, limit])
   }
