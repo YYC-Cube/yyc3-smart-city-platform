@@ -18,7 +18,7 @@ This document provides a comprehensive overview of all GitHub Actions workflows 
 
 3. **Deploy to Vercel** - `.github/workflows/deploy.yml`
    - Runs on: Pushes to main branch
-   - Actions: Build and deploy to production
+   - Actions: Build and deploy to production using Vercel CLI
    - Purpose: Automated production deployments
 
 ### Automation Workflows
@@ -50,12 +50,7 @@ This document provides a comprehensive overview of all GitHub Actions workflows 
 
 ### Quality Workflows
 
-9. **Code Formatting Check** - `.github/workflows/format-check.yml`
-   - Runs on: Pull requests
-   - Actions: Verify code formatting
-   - Purpose: Maintain consistent code style
-
-10. **Link Check** - `.github/workflows/link-check.yml`
+9. **Link Check** - `.github/workflows/link-check.yml`
     - Runs on: PR with markdown changes, weekly
     - Actions: Check for broken links in documentation
     - Purpose: Maintain documentation quality

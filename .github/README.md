@@ -29,7 +29,7 @@ Performs automated security scanning:
 **Trigger:** Pushes to `main` branch and manual dispatch
 
 Deploys the application to Vercel:
-- 🚀 Builds and deploys to production
+- 🚀 Builds and deploys to production using Vercel CLI
 - ⚙️ Requires Vercel secrets to be configured
 
 **Required Secrets:**
@@ -76,6 +76,14 @@ Automatically assigns reviewers and assignees:
 - 📋 Assigns team members to new issues
 - ⏭️ Skips draft PRs
 - ⚙️ Configuration in `.github/auto-assign.yml`
+
+### 9. **Link Check** (`link-check.yml`)
+**Trigger:** When markdown files change in PRs, weekly, and manual dispatch
+
+Validates links in documentation:
+- 🔗 Checks for broken links in markdown files
+- 📅 Runs weekly to catch external link changes
+- ⚙️ Configuration in `.github/markdown-link-check-config.json`
 
 ## 🔧 Configuration Files
 
