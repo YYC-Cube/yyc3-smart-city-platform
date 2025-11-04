@@ -40,6 +40,7 @@ export function AIAssistant() {
   const [inputValue, setInputValue] = useState("")
   const [isListening, setIsListening] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const quickActions: QuickAction[] = [
@@ -59,33 +60,44 @@ export function AIAssistant() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
-  const handleSendMessage = async (content: string) => {
-    if (!content.trim()) return
+    const handleSendMessage = async (content?: string) => {
+    const messageContent = content || inputValue.trim()
+    if (!messageContent) return
 
+    setError(null) // 清除之前的错误
+    
     const userMessage: Message = {
       id: Date.now().toString(),
       type: "user",
-      content: content.trim(),
+      content: messageContent,
       timestamp: new Date(),
     }
 
-    setMessages((prev) => [...prev, userMessage])
+    setMessages(prev => [...prev, userMessage])
     setInputValue("")
     setIsTyping(true)
 
-    // 模拟AI响应
-    setTimeout(() => {
-      const aiResponse = generateAIResponse(content.trim())
+    try {
+      // 模拟API调用延迟
+      await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000))
+      
+      const response = getAIResponse(messageContent)
+      
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: "assistant",
-        content: aiResponse.content,
+        content: response.content,
         timestamp: new Date(),
-        suggestions: aiResponse.suggestions,
+        suggestions: response.suggestions,
       }
-      setMessages((prev) => [...prev, assistantMessage])
+
+      setMessages(prev => [...prev, assistantMessage])
+    } catch (err) {
+      setError("抱歉，服务暂时不可用，请稍后再试")
+      console.error("AI 助手错误:", err)
+    } finally {
       setIsTyping(false)
-    }, 1500)
+    }
   }
 
   const generateAIResponse = (userInput: string): { content: string; suggestions?: string[] } => {
@@ -136,13 +148,25 @@ export function AIAssistant() {
 
   const handleVoiceInput = () => {
     setIsListening(!isListening)
-    // 这里集成语音识别功能
+    setError(null)
+    
     if (!isListening) {
+      // 检查浏览器语音识别支持
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        setError("您的浏览器不支持语音识别功能")
+        return
+      }
+      
       // 开始语音识别
-      setTimeout(() => {
+      try {
+        setTimeout(() => {
+          setIsListening(false)
+          setInputValue("语音输入测试内容")
+        }, 3000)
+      } catch (err) {
+        setError("语音识别出现错误，请重试")
         setIsListening(false)
-        setInputValue("语音输入测试内容")
-      }, 3000)
+      }
     }
   }
 
@@ -288,6 +312,11 @@ export function AIAssistant() {
 
           {/* 输入区域 */}
           <div className="p-4 border-t">
+            {error && (
+              <div className="mb-2 p-2 bg-red-50 border border-red-200 rounded-md">
+                <p className="text-red-600 text-xs">{error}</p>
+              </div>
+            )}
             <div className="flex items-center space-x-2">
               <Input
                 value={inputValue}

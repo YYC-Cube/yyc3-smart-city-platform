@@ -1,10 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   Megaphone,
   Search,
@@ -25,11 +26,75 @@ import {
   Info,
   Gift,
   Calendar,
+  RefreshCw,
 } from "lucide-react"
 
 export default function AnnouncementsPage() {
   const [selectedChannel, setSelectedChannel] = useState("all")
   const [searchQuery, setSearchQuery] = useState("")
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [announcements, setAnnouncements] = useState<any[]>([])
+
+  // 模拟数据加载
+  useEffect(() => {
+    const loadAnnouncements = async () => {
+      try {
+        setIsLoading(true)
+        setError(null)
+        
+        // 模拟 API 调用
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        
+        // 在实际应用中，这里会是真正的 API 调用
+        const mockData = [
+          {
+            id: 1,
+            title: "台风&quot;海葵&quot;预警通知",
+            content: "受台风影响，明日将有大风大雨，请市民做好防护措施，避免外出。",
+            channel: "city",
+            type: "emergency",
+            priority: "high",
+            publishTime: "2024-01-15 08:30",
+            views: 15420,
+            likes: 234,
+            publisher: "北京市应急管理局",
+            location: "全市",
+            tags: ["紧急", "天气", "安全"],
+            image: "/placeholder.svg?height=200&width=300",
+          },
+          {
+            id: 2,
+            title: "地铁2号线部分站点临时关闭",
+            content: "因设备维护需要，地铁2号线东直门站至朝阳门站区间将于本周末临时关闭。",
+            channel: "transport",
+            type: "notice",
+            priority: "medium",
+            publishTime: "2024-01-15 10:15",
+            views: 8960,
+            likes: 156,
+            publisher: "北京地铁运营公司",
+            location: "2号线沿线",
+            tags: ["交通", "地铁", "维护"],
+            image: "/placeholder.svg?height=200&width=300",
+          },
+        ]
+        
+        setAnnouncements(mockData)
+      } catch (err) {
+        setError("加载公告失败，请检查网络连接")
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadAnnouncements()
+  }, [selectedChannel])
+
+  const handleRetry = () => {
+    // 重新加载数据的逻辑
+    window.location.reload()
+  }
 
   // 公告频道
   const channels = [
