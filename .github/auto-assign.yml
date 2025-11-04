@@ -1,0 +1,27 @@
+# Auto-assign configuration
+# See https://github.com/kentaro-m/auto-assign-action for syntax
+
+# Set to true to add reviewers to pull requests
+addReviewers: true
+
+# Set to true to add assignees to pull requests
+addAssignees: true
+
+# A list of reviewers to be added to pull requests (GitHub user name)
+reviewers:
+  - YYC-Cube
+
+# A list of assignees to be added to pull requests (GitHub user name)
+assignees:
+  - YYC-Cube
+
+# A number of reviewers added to the pull request
+# Set to 0 to add all the reviewers (default: 0)
+numberOfReviewers: 0
+
+# A number of assignees to add to the pull request
+# Set to 0 to add all the assignees (default: 0)  
+numberOfAssignees: 0
+
+# Skip adding reviewers/assignees if PR is in draft
+skipDraft: true

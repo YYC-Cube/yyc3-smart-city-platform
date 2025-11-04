@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Ask a Question
+    url: https://github.com/YYC-Cube/yyc3-smart-city-platform/discussions
+    about: Ask questions and discuss with the community
+  - name: Security Issue
+    url: https://github.com/YYC-Cube/yyc3-smart-city-platform/security/advisories/new
+    about: Report a security vulnerability

@@ -1,0 +1,30 @@
+# Configuration for PR auto-labeling
+# See https://github.com/actions/labeler for syntax
+
+'dependencies':
+  - 'package.json'
+  - 'pnpm-lock.yaml'
+
+'documentation':
+  - '**/*.md'
+  - 'docs/**/*'
+
+'frontend':
+  - 'app/**/*'
+  - 'components/**/*'
+  - 'styles/**/*'
+
+'api':
+  - 'app/api/**/*'
+
+'configuration':
+  - '*.config.*'
+  - '.eslintrc.json'
+  - 'tsconfig.json'
+
+'ci/cd':
+  - '.github/**/*'
+
+'database':
+  - 'app/**/db*/**/*'
+  - '**/db.ts'
