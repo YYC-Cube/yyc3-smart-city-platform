@@ -23,7 +23,7 @@ environment:
   package_manager: pnpm
   
 prerequisites:
-  - Node.js 18 or higher
+  - Node.js 18.0.0 or higher
   - pnpm package manager
   - Git for version control
 

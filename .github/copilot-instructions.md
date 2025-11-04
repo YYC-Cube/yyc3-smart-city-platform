@@ -21,7 +21,7 @@ This repository is automatically synced with v0.app deployments and hosted on Ve
   /medical        - Healthcare services
   /transport      - Transportation services
   [other modules] - Various smart city service modules
-/components       - Reusable React components (Radix UI + shadcn/ui)
+/components       - Reusable React components built with Radix UI primitives and shadcn/ui
 /contexts         - React Context providers
 /docs             - Documentation
 /lib              - Utility functions and shared logic
@@ -32,10 +32,10 @@ This repository is automatically synced with v0.app deployments and hosted on Ve
 
 ## Technology Stack
 
-- **Framework**: Next.js 14.2.3 (App Router)
-- **Language**: TypeScript 5 (strict mode enabled)
-- **UI Library**: React 18.2.0
-- **Styling**: Tailwind CSS 3.4 with tailwindcss-animate
+- **Framework**: Next.js 14.x (App Router)
+- **Language**: TypeScript 5.x (strict mode enabled)
+- **UI Library**: React 18.x
+- **Styling**: Tailwind CSS 3.x with tailwindcss-animate
 - **UI Components**: Radix UI primitives + shadcn/ui
 - **Database**: MySQL2
 - **Package Manager**: pnpm
@@ -137,9 +137,11 @@ When working on features:
 ### Integration with v0.app
 
 This repository syncs automatically with v0.app:
-- Changes from v0.app deployments are pushed to this repo
-- Maintain compatibility with v0.app's deployment system
-- Be cautious when making manual changes that might conflict with v0.app updates
+- Changes from v0.app deployments are automatically pushed to this repo
+- When making manual changes, ensure they are compatible with the Next.js App Router structure
+- Avoid modifying files that are primarily managed by v0.app (check commit history)
+- If conflicts arise, coordinate with the team before merging v0.app updates
+- Focus manual changes on configuration files, custom utilities, and new features not in v0.app
 
 ### Common Pitfalls to Avoid
 
