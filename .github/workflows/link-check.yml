@@ -12,6 +12,8 @@ jobs:
   check-links:
     name: Check Markdown Links
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout code
