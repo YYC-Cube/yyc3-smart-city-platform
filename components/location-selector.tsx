@@ -26,7 +26,7 @@ export function LocationSelector() {
   // 更新附近区域列表
   useEffect(() => {
     if (geolocation.userLocation) {
-      const nearby = getNearbyLocations(5)
+      const nearby = getNearbyLocations(geolocation.userLocation, 5)
       setNearbyLocations(nearby)
     }
   }, [geolocation.userLocation, getNearbyLocations])
@@ -202,7 +202,7 @@ export function LocationSelector() {
                   <div className="text-center py-8 text-gray-500">
                     <Navigation className="h-8 w-8 mx-auto mb-2 opacity-50" />
                     <p className="text-sm">请先获取当前位置</p>
-                    <p className="text-xs">点击上方"获取当前位置"按钮</p>
+                    <p className="text-xs">点击上方&quot;获取当前位置&quot;按钮</p>
                   </div>
                 )}
               </TabsContent>

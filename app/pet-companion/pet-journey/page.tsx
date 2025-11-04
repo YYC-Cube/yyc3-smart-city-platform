@@ -4,7 +4,7 @@ const PetJourneyPage = () => {
   return (
     <div>
       <h1>Pet Journey</h1>
-      <p>We expect to complete your pet's journey by {expectedDate}.</p>
+      <p>We expect to complete your pet&apos;s journey by {expectedDate}.</p>
     </div>
   )
 }

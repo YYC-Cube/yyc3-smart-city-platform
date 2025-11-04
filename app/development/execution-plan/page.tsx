@@ -302,7 +302,7 @@ export default function ExecutionPlanPage() {
                 <Bot className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">智能管家"小语"项目执行计划</h1>
+                <h1 className="text-xl font-bold text-gray-900">智能管家&quot;小语&quot;项目执行计划</h1>
                 <p className="text-xs text-gray-500">多维智慧生活管家详细开发方案</p>
               </div>
             </div>

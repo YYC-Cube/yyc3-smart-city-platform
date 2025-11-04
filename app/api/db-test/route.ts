@@ -20,12 +20,12 @@ export async function GET() {
     // 测试1: 数据库连接
     const connectionTest = {
       name: "数据库连接测试",
-      status: "running",
+      status: "running" as "running" | "passed" | "failed",
       startTime: Date.now(),
       endTime: 0,
       duration: 0,
-      error: null,
-      result: null,
+      error: null as string | null,
+      result: null as any,
     }
 
     try {
@@ -47,12 +47,12 @@ export async function GET() {
     // 测试2: 用户模型
     const userTest = {
       name: "用户模型测试",
-      status: "running",
+      status: "running" as "running" | "passed" | "failed",
       startTime: Date.now(),
       endTime: 0,
       duration: 0,
-      error: null,
-      result: null,
+      error: null as string | null,
+      result: null as any,
     }
 
     try {
@@ -75,12 +75,12 @@ export async function GET() {
     // 测试3: 商家模型
     const merchantTest = {
       name: "商家模型测试",
-      status: "running",
+      status: "running" as "running" | "passed" | "failed",
       startTime: Date.now(),
       endTime: 0,
       duration: 0,
-      error: null,
-      result: null,
+      error: null as string | null,
+      result: null as any,
     }
 
     try {
@@ -103,12 +103,12 @@ export async function GET() {
     // 测试4: 订单模型
     const orderTest = {
       name: "订单模型测试",
-      status: "running",
+      status: "running" as "running" | "passed" | "failed",
       startTime: Date.now(),
       endTime: 0,
       duration: 0,
-      error: null,
-      result: null,
+      error: null as string | null,
+      result: null as any,
     }
 
     try {
@@ -131,12 +131,12 @@ export async function GET() {
     // 测试5: 公告模型
     const announcementTest = {
       name: "公告模型测试",
-      status: "running",
+      status: "running" as "running" | "passed" | "failed",
       startTime: Date.now(),
       endTime: 0,
       duration: 0,
-      error: null,
-      result: null,
+      error: null as string | null,
+      result: null as any,
     }
 
     try {

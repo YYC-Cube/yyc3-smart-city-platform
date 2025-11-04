@@ -132,7 +132,7 @@ interface LocationContextType {
   availableLocations: Location[]
   geolocation: GeolocationState
   requestLocation: () => Promise<void>
-  getNearbyLocations: (limit?: number) => Location[]
+  getNearbyLocations: (userLoc?: { lat: number; lng: number }, limit?: number) => Location[]
   calculateDistance: (lat1: number, lng1: number, lat2: number, lng2: number) => number
 }
 
