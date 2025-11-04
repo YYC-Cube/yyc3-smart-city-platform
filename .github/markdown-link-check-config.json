@@ -1,0 +1,23 @@
+{
+  "ignorePatterns": [
+    {
+      "pattern": "^http://localhost"
+    },
+    {
+      "pattern": "^https://fonts.googleapis.com"
+    },
+    {
+      "pattern": "^https://vercel.com/yyc3/"
+    }
+  ],
+  "timeout": "20s",
+  "retryOn429": true,
+  "retryCount": 3,
+  "fallbackHttpStatus": [
+    400,
+    401,
+    403,
+    404,
+    500
+  ]
+}
