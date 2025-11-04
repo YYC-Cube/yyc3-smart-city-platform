@@ -1,0 +1,35 @@
+# GitHub Copilot Setup Steps
+# This file defines the automated setup steps for preparing the development environment
+
+steps:
+  - name: Install dependencies
+    description: Install Node.js dependencies using pnpm
+    run: pnpm install
+    
+  - name: Verify TypeScript configuration
+    description: Check TypeScript setup and configuration
+    run: npx tsc --noEmit
+    
+  - name: Run linter
+    description: Check code style and potential issues
+    run: pnpm lint
+    
+  - name: Build project
+    description: Build the Next.js application to verify everything compiles
+    run: pnpm build
+
+environment:
+  node_version: ">=18.0.0"
+  package_manager: pnpm
+  
+prerequisites:
+  - Node.js 18 or higher
+  - pnpm package manager
+  - Git for version control
+
+notes:
+  - This is a Next.js 14 application using the App Router
+  - The project uses TypeScript in strict mode
+  - Tailwind CSS is configured for styling
+  - The build process may take a few minutes on first run
+  - Development server runs on http://localhost:3000
