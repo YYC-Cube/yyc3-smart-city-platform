@@ -32,7 +32,7 @@ jobs:
         run: npm install -g pnpm@8
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Run TypeScript type check
         id: type-check
@@ -168,7 +168,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.issue.number,
-              event: allPassed ? 'COMMENT' : 'COMMENT',
+              event: 'COMMENT',
               body: reviewBody
             });
 
@@ -241,21 +241,19 @@ jobs:
     if: github.event.pull_request.draft == false
     
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
       - name: Analyze changed files
         uses: actions/github-script@v7
         with:
           script: |
-            const { execSync } = require('child_process');
+            // Get list of changed files using GitHub API
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              per_page: 100
+            });
             
-            // Get list of changed files
-            const changedFiles = execSync('git diff --name-only origin/${{ github.base_ref }}...HEAD', { encoding: 'utf8' })
-              .split('\n')
-              .filter(f => f.length > 0);
+            const changedFiles = files.map(file => file.filename);
             
             let analysis = {
               hasConfigChanges: false,
