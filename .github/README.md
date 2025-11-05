@@ -37,14 +37,39 @@ Deploys the application to Vercel:
 - `VERCEL_ORG_ID` - Your Vercel organization ID
 - `VERCEL_PROJECT_ID` - Your Vercel project ID
 
-### 4. **PR Labeler** (`pr-labeler.yml`)
+### 4. **PR Auto Review** (`pr-review.yml`)
+**Trigger:** When PRs are opened, synchronized, reopened, or ready for review
+
+Performs automated code review and quality checks:
+- 🤖 **Automated Code Quality**: Runs TypeScript type check, ESLint, and build verification
+- 📝 **PR Description Check**: Validates PR description completeness and quality
+- 🔍 **Changed Files Analysis**: Analyzes changed files and provides contextual warnings
+- ✅ **Review Checklist**: Posts comprehensive review checklist based on project guidelines
+- 🔒 **Security Awareness**: Flags security-sensitive file changes for extra scrutiny
+- 📦 **Dependency Tracking**: Warns about dependency changes that need team discussion
+- 📚 **Documentation Reminder**: Reminds to update documentation for API changes
+
+**Jobs:**
+- `code-quality` - Runs automated code quality checks and posts review
+- `pr-description-check` - Validates PR description quality
+- `changed-files-analysis` - Analyzes changed files and provides warnings
+
+**Review Guidelines Based On:**
+- Code style and naming conventions
+- Type safety and error handling
+- Security considerations (SQL injection, XSS, authorization)
+- Test coverage
+- Documentation completeness
+- Architectural constraints
+
+### 5. **PR Labeler** (`pr-labeler.yml`)
 **Trigger:** When PRs are opened, synchronized, or reopened
 
 Automatically labels PRs based on changed files:
 - 🏷️ Adds labels like `dependencies`, `documentation`, `frontend`, `api`, etc.
 - 📝 Configuration in `.github/labeler.yml`
 
-### 5. **PR Size Check** (`pr-size-check.yml`)
+### 6. **PR Size Check** (`pr-size-check.yml`)
 **Trigger:** When PRs are opened, synchronized, or reopened
 
 Adds size labels to PRs:
@@ -52,7 +77,7 @@ Adds size labels to PRs:
 - ⚠️ Warns about very large PRs
 - 🚫 Ignores lock files
 
-### 6. **Stale Issues and PRs** (`stale.yml`)
+### 7. **Stale Issues and PRs** (`stale.yml`)
 **Trigger:** Daily at midnight and manual dispatch
 
 Manages stale issues and PRs:
@@ -60,7 +85,7 @@ Manages stale issues and PRs:
 - 🔄 PRs: Marked stale after 45 days, closed after 7 more days
 - 📌 Exempts issues/PRs with labels: `pinned`, `security`, `bug`, `work-in-progress`
 
-### 7. **Release** (`release.yml`)
+### 8. **Release** (`release.yml`)
 **Trigger:** When tags matching `v*` are pushed or manual dispatch
 
 Creates GitHub releases:
@@ -68,7 +93,7 @@ Creates GitHub releases:
 - 🎉 Creates release notes
 - 🏷️ Tags releases
 
-### 8. **Auto Assign** (`auto-assign.yml`)
+### 9. **Auto Assign** (`auto-assign.yml`)
 **Trigger:** When PRs or issues are opened
 
 Automatically assigns reviewers and assignees:
@@ -77,7 +102,7 @@ Automatically assigns reviewers and assignees:
 - ⏭️ Skips draft PRs
 - ⚙️ Configuration in `.github/auto-assign.yml`
 
-### 9. **Link Check** (`link-check.yml`)
+### 10. **Link Check** (`link-check.yml`)
 **Trigger:** When markdown files change in PRs, weekly, and manual dispatch
 
 Validates links in documentation:
