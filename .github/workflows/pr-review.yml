@@ -1,0 +1,343 @@
+name: PR Auto Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  # Automated code quality checks
+  code-quality:
+    name: Code Quality Check
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        run: npm install -g pnpm@8
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Run TypeScript type check
+        id: type-check
+        run: |
+          echo "## TypeScript Type Check Results" > type-check-results.txt
+          if pnpm run type-check 2>&1 | tee -a type-check-results.txt; then
+            echo "✅ Type check passed" >> type-check-results.txt
+            echo "type_check_status=success" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Type check failed - potential type errors detected" >> type-check-results.txt
+            echo "type_check_status=failure" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+
+      - name: Run ESLint
+        id: lint
+        run: |
+          echo "## ESLint Check Results" > lint-results.txt
+          if pnpm run lint 2>&1 | tee -a lint-results.txt; then
+            echo "✅ Linting passed" >> lint-results.txt
+            echo "lint_status=success" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Linting failed - code style issues detected" >> lint-results.txt
+            echo "lint_status=failure" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+
+      - name: Build check
+        id: build
+        run: |
+          echo "## Build Check Results" > build-results.txt
+          if pnpm run build 2>&1 | tee -a build-results.txt; then
+            echo "✅ Build successful" >> build-results.txt
+            echo "build_status=success" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Build failed" >> build-results.txt
+            echo "build_status=failure" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+
+      - name: Post review comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            let typeCheckResults = '';
+            let lintResults = '';
+            let buildResults = '';
+            
+            try {
+              typeCheckResults = fs.readFileSync('type-check-results.txt', 'utf8');
+            } catch (e) {
+              typeCheckResults = '⚠️ Type check results not available';
+            }
+            
+            try {
+              lintResults = fs.readFileSync('lint-results.txt', 'utf8');
+            } catch (e) {
+              lintResults = '⚠️ Lint results not available';
+            }
+            
+            try {
+              buildResults = fs.readFileSync('build-results.txt', 'utf8');
+            } catch (e) {
+              buildResults = '⚠️ Build results not available';
+            }
+            
+            const typeCheckStatus = '${{ steps.type-check.outputs.type_check_status }}';
+            const lintStatus = '${{ steps.lint.outputs.lint_status }}';
+            const buildStatus = '${{ steps.build.outputs.build_status }}';
+            
+            const allPassed = typeCheckStatus === 'success' && lintStatus === 'success' && buildStatus === 'success';
+            
+            const reviewBody = `## 🤖 Automated Code Review
+            
+            ### Summary
+            ${allPassed ? '✅ All automated checks passed!' : '⚠️ Some checks require attention'}
+            
+            <details>
+            <summary>📊 Check Results</summary>
+            
+            ${typeCheckResults}
+            
+            ---
+            
+            ${lintResults}
+            
+            ---
+            
+            ${buildResults}
+            
+            </details>
+            
+            ### 📋 Review Checklist (Based on Project Guidelines)
+            
+            Please ensure the following before merging:
+            
+            #### Code Quality
+            - [ ] Code follows project coding standards and naming conventions
+            - [ ] No potential null pointer, type errors, or missing exception handling
+            - [ ] Code is well-commented, especially in complex areas
+            
+            #### Testing
+            - [ ] New features include appropriate unit/integration tests
+            - [ ] All tests pass
+            - [ ] Test coverage is adequate
+            
+            #### Security
+            - [ ] No SQL injection vulnerabilities
+            - [ ] No XSS vulnerabilities
+            - [ ] No unauthorized access issues
+            - [ ] Sensitive data is not exposed
+            
+            #### Architecture & Documentation
+            - [ ] Module separation is clear, follows layered design
+            - [ ] No unauthorized third-party dependencies added
+            - [ ] API changes are documented
+            - [ ] Breaking changes are clearly explained with migration path
+            
+            #### Compatibility
+            - [ ] Frontend compatible with mainstream browsers
+            - [ ] RESTful API style is consistent
+            - [ ] Interface/data structure changes maintain backward compatibility
+            
+            ---
+            
+            *This is an automated review. Please have a human reviewer verify these items.*
+            `;
+            
+            // Post review comment
+            await github.rest.pulls.createReview({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              event: allPassed ? 'COMMENT' : 'COMMENT',
+              body: reviewBody
+            });
+
+  # PR description quality check
+  pr-description-check:
+    name: PR Description Check
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    
+    steps:
+      - name: Check PR description
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const body = pr.body || '';
+            
+            const hasDescription = body.length > 50;
+            const hasChecklist = body.includes('- [');
+            const hasRelatedIssues = body.includes('Closes #') || body.includes('Fixes #') || body.includes('Related to #');
+            
+            let warnings = [];
+            let suggestions = [];
+            
+            if (!hasDescription) {
+              warnings.push('❌ PR description is too short or missing');
+              suggestions.push('Please provide a detailed description of your changes');
+            }
+            
+            if (!hasChecklist) {
+              warnings.push('⚠️ PR checklist not completed');
+              suggestions.push('Please complete the checklist in the PR template');
+            }
+            
+            if (!hasRelatedIssues) {
+              warnings.push('⚠️ No related issues linked');
+              suggestions.push('Consider linking related issues using "Closes #issue_number"');
+            }
+            
+            if (warnings.length > 0) {
+              const comment = `## 📝 PR Description Review
+              
+            ${warnings.join('\n')}
+            
+            ### Suggestions:
+            ${suggestions.map(s => `- ${s}`).join('\n')}
+            
+            Please update your PR description to include:
+            1. A clear description of what changes were made and why
+            2. Completed checklist from the PR template
+            3. Links to related issues
+            
+            This helps reviewers understand your changes better and speeds up the review process.
+            `;
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            } else {
+              core.info('✅ PR description looks good');
+            }
+
+  # File change analysis
+  changed-files-analysis:
+    name: Changed Files Analysis
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Analyze changed files
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { execSync } = require('child_process');
+            
+            // Get list of changed files
+            const changedFiles = execSync('git diff --name-only origin/${{ github.base_ref }}...HEAD', { encoding: 'utf8' })
+              .split('\n')
+              .filter(f => f.length > 0);
+            
+            let analysis = {
+              hasConfigChanges: false,
+              hasDbChanges: false,
+              hasApiChanges: false,
+              hasSecurityFiles: false,
+              hasDependencyChanges: false,
+              hasDocChanges: false,
+              hasTestChanges: false
+            };
+            
+            const warnings = [];
+            
+            changedFiles.forEach(file => {
+              if (file.includes('config') || file.includes('.env') || file.includes('.yml') || file.includes('.yaml')) {
+                analysis.hasConfigChanges = true;
+              }
+              if (file.includes('database') || file.includes('migration') || file.includes('.sql')) {
+                analysis.hasDbChanges = true;
+              }
+              if (file.includes('api/') || file.includes('/api/')) {
+                analysis.hasApiChanges = true;
+              }
+              if (file.includes('auth') || file.includes('security')) {
+                analysis.hasSecurityFiles = true;
+              }
+              if (file.includes('package.json') || file.includes('pnpm-lock.yaml')) {
+                analysis.hasDependencyChanges = true;
+              }
+              if (file.includes('.md') || file.includes('docs/')) {
+                analysis.hasDocChanges = true;
+              }
+              if (file.includes('test') || file.includes('spec')) {
+                analysis.hasTestChanges = true;
+              }
+            });
+            
+            // Generate warnings based on changes
+            if (analysis.hasConfigChanges) {
+              warnings.push('⚠️ **Configuration files changed** - Please explain security implications and deployment impact');
+            }
+            
+            if (analysis.hasDbChanges) {
+              warnings.push('⚠️ **Database changes detected** - Ensure migration scripts are included and backward compatible');
+            }
+            
+            if (analysis.hasApiChanges && !analysis.hasDocChanges) {
+              warnings.push('⚠️ **API changes without documentation updates** - Please update API documentation');
+            }
+            
+            if (analysis.hasSecurityFiles) {
+              warnings.push('🔒 **Security-related files changed** - Extra scrutiny required for authentication/authorization changes');
+            }
+            
+            if (analysis.hasDependencyChanges) {
+              warnings.push('📦 **Dependencies changed** - Ensure new dependencies are discussed with team and security-vetted');
+            }
+            
+            if ((analysis.hasApiChanges || changedFiles.some(f => f.includes('.ts') || f.includes('.tsx') || f.includes('.js') || f.includes('.jsx'))) && !analysis.hasTestChanges) {
+              warnings.push('⚠️ **Code changes without test updates** - Consider adding or updating tests');
+            }
+            
+            if (warnings.length > 0) {
+              const comment = `## 🔍 Changed Files Analysis
+              
+            ${warnings.join('\n')}
+            
+            ### Changed Files Summary
+            - Total files changed: ${changedFiles.length}
+            - Configuration changes: ${analysis.hasConfigChanges ? 'Yes' : 'No'}
+            - Database changes: ${analysis.hasDbChanges ? 'Yes' : 'No'}
+            - API changes: ${analysis.hasApiChanges ? 'Yes' : 'No'}
+            - Security files: ${analysis.hasSecurityFiles ? 'Yes' : 'No'}
+            - Dependency changes: ${analysis.hasDependencyChanges ? 'Yes' : 'No'}
+            - Documentation updates: ${analysis.hasDocChanges ? 'Yes' : 'No'}
+            - Test changes: ${analysis.hasTestChanges ? 'Yes' : 'No'}
+            `;
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }
