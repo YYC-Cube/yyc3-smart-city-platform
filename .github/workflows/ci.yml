@@ -13,18 +13,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
       - name: Use Node.js 20.x
         uses: actions/setup-node@v6
         with:
           node-version: '20'
           cache: 'pnpm'
 
-      - name: Install pnpm
-        run: npm install -g pnpm@8
-
       - name: Install dependencies
-        # Allow pnpm to adapt if lockfile version mismatches the runner's pnpm
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Run type-check
         run: pnpm run type-check
