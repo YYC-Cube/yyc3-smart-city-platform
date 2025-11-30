@@ -34,7 +34,7 @@ export default function AnnouncementsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [announcements, setAnnouncements] = useState<any[]>([])
+  const [announcementsData, setAnnouncementsData] = useState<any[]>([])
 
   // 模拟数据加载
   useEffect(() => {
@@ -80,7 +80,7 @@ export default function AnnouncementsPage() {
           },
         ]
         
-        setAnnouncements(mockData)
+        setAnnouncementsData(mockData)
       } catch (err) {
         setError("加载公告失败，请检查网络连接")
       } finally {
@@ -106,7 +106,6 @@ export default function AnnouncementsPage() {
     { id: "health", name: "健康医疗", icon: Stethoscope, count: 18, color: "text-red-600" },
     { id: "education", name: "教育培训", icon: GraduationCap, count: 12, color: "text-indigo-600" },
   ]
-
 
   // 获取公告类型图标和颜色
   const getTypeIcon = (type: string) => {
@@ -359,7 +358,7 @@ export default function AnnouncementsPage() {
 
                               <div className="flex items-center justify-between">
                                 <div className="flex space-x-2">
-                                  {announcement.tags.map((tag, index) => (
+                                  {announcement.tags.map((tag: string, index: number) => (
                                     <Badge key={index} variant="outline" className="text-xs">
                                       {tag}
                                     </Badge>
