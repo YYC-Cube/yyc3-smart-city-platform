@@ -81,7 +81,7 @@ export function AIAssistant() {
       // 模拟API调用延迟
       await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000))
       
-      const response = getAIResponse(messageContent)
+      const response = generateAIResponse(messageContent)
       
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),

@@ -34,7 +34,7 @@ export default function AnnouncementsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [announcements, setAnnouncements] = useState<any[]>([])
+  const [announcementsData, setAnnouncementsData] = useState<any[]>([])
 
   // 模拟数据加载
   useEffect(() => {
@@ -80,7 +80,7 @@ export default function AnnouncementsPage() {
           },
         ]
         
-        setAnnouncements(mockData)
+        setAnnouncementsData(mockData)
       } catch (err) {
         setError("加载公告失败，请检查网络连接")
       } finally {
@@ -107,8 +107,8 @@ export default function AnnouncementsPage() {
     { id: "education", name: "教育培训", icon: GraduationCap, count: 12, color: "text-indigo-600" },
   ]
 
-  // 公告数据
-  const announcements = [
+  // 公告数据（使用状态中的数据）
+  const announcements = announcementsData.length > 0 ? announcementsData : [
     {
       id: 1,
       title: "台风“海葵”预警通知",
@@ -452,7 +452,7 @@ export default function AnnouncementsPage() {
 
                               <div className="flex items-center justify-between">
                                 <div className="flex space-x-2">
-                                  {announcement.tags.map((tag, index) => (
+                                  {announcement.tags.map((tag: string, index: number) => (
                                     <Badge key={index} variant="outline" className="text-xs">
                                       {tag}
                                     </Badge>
