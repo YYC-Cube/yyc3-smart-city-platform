@@ -29,12 +29,28 @@ import {
   RefreshCw,
 } from "lucide-react"
 
+interface Announcement {
+  id: number
+  title: string
+  content: string
+  channel: string
+  type: string
+  priority: string
+  publishTime: string
+  views: number
+  likes: number
+  publisher: string
+  location: string
+  tags: string[]
+  image: string
+}
+
 export default function AnnouncementsPage() {
   const [selectedChannel, setSelectedChannel] = useState("all")
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [announcementsData, setAnnouncementsData] = useState<any[]>([])
+  const [announcementsData, setAnnouncementsData] = useState<Announcement[]>([])
 
   // 模拟数据加载
   useEffect(() => {
@@ -163,7 +179,7 @@ export default function AnnouncementsPage() {
   }
 
   // 过滤公告
-  const filteredAnnouncements = announcements.filter((announcement) => {
+  const filteredAnnouncements = announcementsData.filter((announcement: Announcement) => {
     const matchesChannel = selectedChannel === "all" || announcement.channel === selectedChannel
     const matchesSearch =
       announcement.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -303,7 +319,7 @@ export default function AnnouncementsPage() {
                 </div>
               </div>
 
-              {filteredAnnouncements.map((announcement) => {
+              {filteredAnnouncements.map((announcement: Announcement) => {
                 const typeInfo = getTypeIcon(announcement.type)
                 const TypeIcon = typeInfo.icon
 
