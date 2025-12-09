@@ -135,8 +135,7 @@ export class UserModel {
   }
 
   static async search(keyword: string, limit = 50): Promise<User[]> {
-    const sql = `SELECT * FROM users WHERE status = 1 AND (phone LIKE ? OR username LIKE ? OR nickname LIKE ?) ORDER BY created_at DESC LIMIT ?`
-    const searchTerm = `%${keyword}%`
-    return query<User>(sql, [searchTerm, searchTerm, searchTerm, limit])
+    const sql = `SELECT * FROM users WHERE status = 1 AND (phone LIKE CONCAT('%', ?, '%') OR username LIKE CONCAT('%', ?, '%') OR nickname LIKE CONCAT('%', ?, '%')) ORDER BY created_at DESC LIMIT ?`
+    return query<User>(sql, [keyword, keyword, keyword, limit])
   }
 }

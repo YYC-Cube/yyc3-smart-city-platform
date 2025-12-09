@@ -157,9 +157,8 @@ export class MerchantModel {
   }
 
   static async search(keyword: string, limit = 50): Promise<Merchant[]> {
-    const sql = `SELECT * FROM merchants WHERE status = 1 AND (merchant_name LIKE ? OR address LIKE ? OR description LIKE ?) ORDER BY rating DESC, created_at DESC LIMIT ?`
-    const searchTerm = `%${keyword}%`
-    return query<Merchant>(sql, [searchTerm, searchTerm, searchTerm, limit])
+    const sql = `SELECT * FROM merchants WHERE status = 1 AND (merchant_name LIKE CONCAT('%', ?, '%') OR address LIKE CONCAT('%', ?, '%') OR description LIKE CONCAT('%', ?, '%')) ORDER BY rating DESC, created_at DESC LIMIT ?`
+    return query<Merchant>(sql, [keyword, keyword, keyword, limit])
   }
 
   static async updateRating(id: number, rating: number): Promise<number> {
