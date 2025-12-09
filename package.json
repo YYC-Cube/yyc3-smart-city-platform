@@ -2,6 +2,7 @@
   "name": "yyc3-smart-city",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.0.0",
   "scripts": {
     "build": "next build",
     "dev": "next dev",
