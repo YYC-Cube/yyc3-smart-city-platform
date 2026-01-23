@@ -1,8 +1,6 @@
-<p align="center">
-  <img src="./public/yyc3-article-cover-05.png" alt="YYC³ Smart City Platform" width="100%" />
-</p>
-
 # 🏠 YYC³ Smart City Platform 智慧城市服务平台
+
+![YYC³ Smart City Platform](./public/yyc3-article-cover-05.png)
 
 [![CI](https://github.com/YYC-Cube/yyc3-smart-city-platform/workflows/CI/badge.svg)](https://github.com/YYC-Cube/yyc3-smart-city-platform/actions/workflows/ci.yml)
 [![Next.js](https://img.shields.io/badge/Next.js-16.0-black?style=flat-square&logo=next.js)](https://nextjs.org/)
