@@ -4,9 +4,10 @@
 
 # 🏠 YYC³ Smart City Platform 智慧城市服务平台
 
-[![Next.js](https://img.shields.io/badge/Next.js-15.0-black?style=flat-square&logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+[![CI](https://github.com/YYC-Cube/yyc3-smart-city-platform/workflows/CI/badge.svg)](https://github.com/YYC-Cube/yyc3-smart-city-platform/actions/workflows/ci.yml)
+[![Next.js](https://img.shields.io/badge/Next.js-16.0-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 [![Standardization](https://img.shields.io/badge/YYC³-Standardization-blue?style=flat-square&logo=shield)](https://github.com/YYC-Cube/yyc3-smart-city-platform)
 [![Smart City](https://img.shields.io/badge/Smart-City-orange?style=flat-square&logo=city)](https://github.com/YYC-Cube/yyc3-smart-city-platform)
@@ -100,10 +101,10 @@ YYC³(YanYuCloudCube)Smart City Platform是一个基于 Next.js 15 构建的现�
 ### 安装步骤
 
 1. **克隆项目**
-\`\`\`bash
-git clone [https://github.com/YYC-Cube/yyc3-smart-city-platform.git]
+```bash
+git clone https://github.com/YYC-Cube/yyc3-smart-city-platform.git
 cd yyc3-smart-city-platform
-\`\`\`
+```
 
 2. **安装依赖**
 \`\`\`bash
@@ -201,7 +202,6 @@ smart-life-assistant/
 ## 📋 开发计划 ❤️
 
 ### 🎯 第一阶段：基础架构搭建（2026年1月21日 - 2月15日）
-
 - [x] 项目初始化和基础框架搭建
 - [x] UI组件库集成和主题配置
 - [x] 路由结构设计和页面框架
@@ -210,7 +210,6 @@ smart-life-assistant/
 - [ ] 数据库设计和API接口
 
 ### 🤖 第二阶段：AI能力与地图集成（2026年2月16日 - 3月31日）
-
 - [ ] 本地大模型部署和接口封装
 - [ ] "小语"智能助手核心功能开发
 - [ ] 百度地图API深度集成
@@ -219,7 +218,6 @@ smart-life-assistant/
 - [ ] AI对话上下文管理
 
 ### 🏠 第三阶段：生活服务整合（2026年4月1日 - 5月15日）
-
 - [ ] 智能家居设备接入
 - [ ] 健康监测数据集成
 - [ ] 社区服务功能开发
@@ -228,7 +226,6 @@ smart-life-assistant/
 - [ ] 数据分析和可视化
 
 ### 🚀 第四阶段：上线运营（2026年4月16日 - 6月30日）
-
 - [ ] 性能优化和安全加固
 - [ ] 用户测试和反馈收集
 - [ ] 运营数据监控
@@ -298,7 +295,7 @@ smart-life-assistant/
 
 ## 📞 联系我们
 
-- **项目主页**: [https://github.com/YYC-Cube/yyc3-smart-city-platform.git]
+- **项目主页**: [https://github.com/YYC-Cube/yyc3-smart-city-platform]
 - **问题反馈**: ❤️<admin@0379.email>❤️
 - **功能建议**: ❤️<admin@0379.email>❤️
 

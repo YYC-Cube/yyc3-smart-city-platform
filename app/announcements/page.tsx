@@ -29,12 +29,28 @@ import {
   RefreshCw,
 } from "lucide-react"
 
+interface Announcement {
+  id: number
+  title: string
+  content: string
+  channel: string
+  type: string
+  priority: string
+  publishTime: string
+  views: number
+  likes: number
+  publisher: string
+  location: string
+  tags: string[]
+  image: string
+}
+
 export default function AnnouncementsPage() {
   const [selectedChannel, setSelectedChannel] = useState("all")
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [announcements, setAnnouncements] = useState<any[]>([])
+  const [announcementsData, setAnnouncementsData] = useState<Announcement[]>([])
 
   // 模拟数据加载
   useEffect(() => {
@@ -80,7 +96,7 @@ export default function AnnouncementsPage() {
           },
         ]
         
-        setAnnouncements(mockData)
+        setAnnouncementsData(mockData)
       } catch (err) {
         setError("加载公告失败，请检查网络连接")
       } finally {
@@ -105,100 +121,6 @@ export default function AnnouncementsPage() {
     { id: "transport", name: "交通出行", icon: Car, count: 23, color: "text-green-600" },
     { id: "health", name: "健康医疗", icon: Stethoscope, count: 18, color: "text-red-600" },
     { id: "education", name: "教育培训", icon: GraduationCap, count: 12, color: "text-indigo-600" },
-  ]
-
-  // 公告数据
-  const announcements = [
-    {
-      id: 1,
-      title: "台风“海葵”预警通知",
-      content: "受台风影响，明日将有大风大雨，请市民做好防护措施，避免外出。",
-      channel: "city",
-      type: "emergency",
-      priority: "high",
-      publishTime: "2024-01-15 08:30",
-      views: 15420,
-      likes: 234,
-      publisher: "北京市应急管理局",
-      location: "全市",
-      tags: ["紧急", "天气", "安全"],
-      image: "/placeholder.svg?height=200&width=300",
-    },
-    {
-      id: 2,
-      title: "地铁2号线部分站点临时关闭",
-      content: "因设备维护需要，地铁2号线东直门站至朝阳门站区间将于本周末临时关闭。",
-      channel: "transport",
-      type: "notice",
-      priority: "medium",
-      publishTime: "2024-01-15 10:15",
-      views: 8960,
-      likes: 156,
-      publisher: "北京地铁运营公司",
-      location: "2号线沿线",
-      tags: ["交通", "地铁", "维护"],
-      image: "/placeholder.svg?height=200&width=300",
-    },
-    {
-      id: 3,
-      title: "社区运动会报名开始",
-      content: "第五届社区运动会即将举办，现开始接受报名，欢迎各位居民积极参与。",
-      channel: "community",
-      type: "activity",
-      priority: "low",
-      publishTime: "2024-01-15 14:20",
-      views: 3450,
-      likes: 89,
-      publisher: "朝阳区社区服务中心",
-      location: "朝阳区各社区",
-      tags: ["活动", "运动", "社区"],
-      image: "/placeholder.svg?height=200&width=300",
-    },
-    {
-      id: 4,
-      title: "永辉超市周年庆大促销",
-      content: "永辉超市5周年庆典，全场商品8折起，会员专享额外9折优惠。",
-      channel: "merchant",
-      type: "promotion",
-      priority: "low",
-      publishTime: "2024-01-15 16:45",
-      views: 12340,
-      likes: 567,
-      publisher: "永辉超市",
-      location: "朝阳店",
-      tags: ["优惠", "购物", "会员"],
-      image: "/placeholder.svg?height=200&width=300",
-    },
-    {
-      id: 5,
-      title: "新冠疫苗接种点调整通知",
-      content: "因场地调整，原社区卫生服务中心疫苗接种点迁移至区医院。",
-      channel: "health",
-      type: "notice",
-      priority: "medium",
-      publishTime: "2024-01-14 09:30",
-      views: 6780,
-      likes: 123,
-      publisher: "朝阳区卫生健康委",
-      location: "朝阳区",
-      tags: ["疫苗", "医疗", "调整"],
-      image: "/placeholder.svg?height=200&width=300",
-    },
-    {
-      id: 6,
-      title: "免费职业技能培训班招生",
-      content: "面向失业人员和在职人员，开设电商运营、平面设计等技能培训班。",
-      channel: "education",
-      type: "recruitment",
-      priority: "medium",
-      publishTime: "2024-01-14 11:00",
-      views: 4560,
-      likes: 78,
-      publisher: "朝阳区人力资源局",
-      location: "朝阳区",
-      tags: ["培训", "技能", "免费"],
-      image: "/placeholder.svg?height=200&width=300",
-    },
   ]
 
   // 获取公告类型图标和颜色
@@ -257,7 +179,7 @@ export default function AnnouncementsPage() {
   }
 
   // 过滤公告
-  const filteredAnnouncements = announcements.filter((announcement) => {
+  const filteredAnnouncements = announcementsData.filter((announcement: Announcement) => {
     const matchesChannel = selectedChannel === "all" || announcement.channel === selectedChannel
     const matchesSearch =
       announcement.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -397,7 +319,7 @@ export default function AnnouncementsPage() {
                 </div>
               </div>
 
-              {filteredAnnouncements.map((announcement) => {
+              {filteredAnnouncements.map((announcement: Announcement) => {
                 const typeInfo = getTypeIcon(announcement.type)
                 const TypeIcon = typeInfo.icon
 
@@ -452,7 +374,7 @@ export default function AnnouncementsPage() {
 
                               <div className="flex items-center justify-between">
                                 <div className="flex space-x-2">
-                                  {announcement.tags.map((tag, index) => (
+                                  {announcement.tags.map((tag: string, index: number) => (
                                     <Badge key={index} variant="outline" className="text-xs">
                                       {tag}
                                     </Badge>
