@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./public/yyc3-article-cover-03.png" alt="YYC³ Smart City Platform" width="100%" />
+  <img src="./public/yyc3-article-cover-05.png" alt="YYC³ Smart City Platform" width="100%" />
 </p>
 
 # 🏠 YYC³ Smart City Platform 智慧城市服务平台
