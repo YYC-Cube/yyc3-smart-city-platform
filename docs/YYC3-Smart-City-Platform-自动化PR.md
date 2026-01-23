@@ -1,8 +1,25 @@
-# 自动化 PR 审核系统
+---
+@file: YYC3-Smart-City-Platform-自动化PR.md
+@description: YYC3-Smart-City-Platform 项目自动化 PR 审核系统，详细说明系统的功能、工作流程和配置要求
+@author: YanYuCloudCube Team
+@version: v1.0.0
+@created: 2026-01-22
+@updated: 2026-01-22
+@status: published
+@tags: [文档管理, 自动化PR, 审核系统]
+---
+
+> ***YanYuCloudCube***
+> 言启象限 | 语枢未来
+> ***Words Initiate Quadrants, Language Serves as Core for the Future***
+> 万象归元于云枢 | 深栈智启新纪元
+> ***All things converge in the cloud pivot; Deep stacks ignite a new era of intelligence***
+
+# YYC³(YanYuCloudCube) Smart City Platform 自动化 PR 审核系统
 
 ## 概述
 
-本项目实现了一个全面的自动化 Pull Request 审核系统，旨在提高代码质量、减少人工审核负担，并确保所有 PR 符合项目的编码标准和最佳实践。
+YYC³(YanYuCloudCube) Smart City Platform 项目实现了一个全面的自动化 Pull Request 审核系统，旨在提高代码质量、减少人工审核负担，并确保所有 PR 符合项目的编码标准和最佳实践。
 
 ## 功能特性
 
